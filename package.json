@@ -38,14 +38,14 @@
           "arch": ["x64"]
         }
       ],
-      "icon": "media/kalyan_college_logo.png"
+      "icon": "media/kalyan_college_logo.ico"
     },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
-      "installerIcon": "media/kalyan_college_logo.png",
-      "uninstallerIcon": "media/kalyan_college_logo.png",
-      "installerHeaderIcon": "media/kalyan_college_logo.png",
+      "installerIcon": "media/kalyan_college_logo.ico",
+      "uninstallerIcon": "media/kalyan_college_logo.ico",
+      "installerHeaderIcon": "media/kalyan_college_logo.ico",
       "include": "installer/installer.nsh",
       "perMachine": true,
       "allowElevation": true,

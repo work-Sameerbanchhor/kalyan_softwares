@@ -30,6 +30,9 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Convert PNG icon to ICO format
+        run: magick media/kalyan_college_logo.png -resize 256x256 media/kalyan_college_logo.ico
+
       - name: Build Windows Installer
         run: npx electron-builder --win --x64
         env:
