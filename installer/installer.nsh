@@ -5,6 +5,10 @@
 !include "nsDialogs.nsh"
 !include "LogicLib.nsh"
 
+; Suppress warning 6010 (unreferenced function) - fires during the uninstaller
+; build pass when install-only functions like ActivationKeyPageCreate aren't used
+!pragma warning disable 6010
+
 Var ActivationKeyDialog
 Var ActivationKeyLabel
 Var ActivationKeyInput
