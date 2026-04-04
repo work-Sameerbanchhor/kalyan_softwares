@@ -33,6 +33,9 @@ jobs:
       - name: Convert PNG icon to ICO format
         run: magick media/kalyan_college_logo.png -resize 256x256 media/kalyan_college_logo.ico
 
+      - name: Convert college banner to NSIS sidebar BMP
+        run: magick media/kalyan_college_banner.png -resize 164x314! -gravity center media/installer_sidebar.bmp
+
       - name: Build Windows Installer
         run: npx electron-builder --win --x64
         env:

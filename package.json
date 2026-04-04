@@ -52,7 +52,8 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "Kalyan Smart Student System",
-      "installerSidebar": null,
+      "installerSidebar": "media/installer_sidebar.bmp",
+      "uninstallerSidebar": "media/installer_sidebar.bmp",
       "license": null
     }
   },
