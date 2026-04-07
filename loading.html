@@ -562,7 +562,7 @@
 
         <!-- Status -->
         <div class="status-area">
-            <span class="status-text" id="status">Scanning network infrastructure</span>
+            <span class="status-text" id="status">Connecting to cloud infrastructure</span>
             <div class="scanning-dots" id="scanning-dots">
                 <span></span><span></span><span></span>
             </div>
@@ -592,11 +592,11 @@
 
         // Cycling status messages for scanning state
         const scanMessages = [
-            'Scanning network infrastructure',
-            'Searching for server',
-            'Discovering local services',
+            'Connecting to cloud infrastructure',
+            'Securing server connection',
+            'Initializing cloud services',
             'Connecting to backend',
-            'Verifying network routes'
+            'Verifying secure routes'
         ];
         let msgIndex = 0;
         let cycleInterval;

@@ -1,11 +1,6 @@
 const { app, BrowserWindow, ipcMain, session } = require('electron');
 const path = require('path');
-const Bonjour = require('bonjour-service').default;
-
-const bonjour = new Bonjour();
 let mainWindow;
-let discoveryTimeout;
-const DISCOVERY_TIMEOUT_MS = 15000;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -39,42 +34,16 @@ function createWindow() {
 function startDiscovery() {
     if (!mainWindow) return;
 
-    mainWindow.webContents.send('discovery-status', { state: 'searching', message: 'Scanning local campus network...' });
+    mainWindow.webContents.send('discovery-status', { state: 'found', message: `Connecting to Cloud Server...` });
+    console.log(`[Connection] Connecting to https://sameerbanchhor-work-kalyan-pg-system.hf.space/`);
 
-    // Reset timeout
-    if (discoveryTimeout) clearTimeout(discoveryTimeout);
-    discoveryTimeout = setTimeout(() => {
-        mainWindow.webContents.send('discovery-status', { state: 'timeout', message: 'Server not found on local network.' });
-        console.log('[Discovery] Timeout reached. Server not found.');
-    }, DISCOVERY_TIMEOUT_MS);
-
-    // Start mDNS browsing
-    const browser = bonjour.find({ type: 'http' });
-
-    browser.on('up', (service) => {
-        console.log('[Discovery] Service found:', service.name, service.host, service.port);
-
-        // Filter for KalyanScanner
-        if (service.name.includes('KalyanScanner')) {
-            clearTimeout(discoveryTimeout);
-            const ip = service.addresses[0];
-            const port = service.port;
-            const serverUrl = `http://${ip}:${port}`;
-
-            mainWindow.webContents.send('discovery-status', { state: 'found', message: `Server identified. Connecting...` });
-            console.log(`[Discovery] Success! Connecting to ${serverUrl}`);
-
-            // Redirect after a short delay for visual feedback
-            setTimeout(() => {
-                mainWindow.loadURL(serverUrl).catch(err => {
-                    console.error('[Discovery] Failed to load server URL:', err);
-                    mainWindow.webContents.send('discovery-status', { state: 'error', message: 'Failed to connect to identified server.' });
-                });
-            }, 3000);
-            
-            browser.stop();
-        }
-    });
+    // Redirect after a short delay for visual feedback
+    setTimeout(() => {
+        mainWindow.loadURL('https://sameerbanchhor-work-kalyan-pg-system.hf.space/').catch(err => {
+            console.error('[Connection] Failed to load server URL:', err);
+            mainWindow.webContents.send('discovery-status', { state: 'error', message: 'Failed to connect to cloud server.' });
+        });
+    }, 2000);
 }
 
 app.whenReady().then(() => {
