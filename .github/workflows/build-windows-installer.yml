@@ -12,6 +12,9 @@ on:
 permissions:
   contents: write
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   # -------------------------------------------------------
   # Build 64-bit installer (Windows 7 x64 / Windows 10/11)
@@ -22,10 +25,10 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '18'      # Node 18 is the last LTS supported by Electron 22
           cache: 'npm'
@@ -45,7 +48,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload x64 Installer Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Kalyan-Smart-Student-System-Windows-x64
           path: |
@@ -63,10 +66,10 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '18'
           cache: 'npm'
@@ -86,7 +89,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload ia32 Installer Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Kalyan-Smart-Student-System-Windows-ia32
           path: |
@@ -106,13 +109,13 @@ jobs:
 
     steps:
       - name: Download x64 Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: Kalyan-Smart-Student-System-Windows-x64
           path: release-assets/
 
       - name: Download ia32 Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: Kalyan-Smart-Student-System-Windows-ia32
           path: release-assets/
