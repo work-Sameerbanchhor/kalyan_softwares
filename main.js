@@ -1,14 +1,18 @@
-const { app, BrowserWindow, ipcMain, session } = require('electron');
+const { app, BrowserWindow, ipcMain, session, Menu } = require('electron');
 const path = require('path');
 let mainWindow;
 
 function createWindow() {
+    // Remove the application menu bar entirely (File, Edit, View, etc.)
+    Menu.setApplicationMenu(null);
+
     mainWindow = new BrowserWindow({
         width: 1200,
         height: 800,
         minWidth: 800,
         minHeight: 600,
         fullscreen: true,
+        autoHideMenuBar: true,
         title: "Kalyan Smart Student System",
         icon: path.join(__dirname, 'media', 'kalyan_college_logo.png'),
         show: false,
