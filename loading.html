@@ -571,12 +571,12 @@
         <!-- Network Indicator -->
         <div class="network-indicator" id="network-indicator">
             <div class="pulse-dot"></div>
-            <span class="network-label">Searching</span>
+            <span class="network-label">Connecting</span>
         </div>
 
         <!-- Retry -->
         <div class="retry-container" id="retry-container">
-            <button class="retry-button" onclick="handleRetry()">Search Again</button>
+            <button class="retry-button" onclick="handleRetry()">Retry Connection</button>
         </div>
     </div>
 
@@ -643,7 +643,7 @@
             } else {
                 retryContainer.style.display = 'none';
                 scanningDots.style.display = 'inline-flex';
-                networkLabel.textContent = 'Searching';
+                networkLabel.textContent = 'Connecting';
             }
         });
 
@@ -653,7 +653,7 @@
             body.classList.add('state-searching');
             retryContainer.style.display = 'none';
             scanningDots.style.display = 'inline-flex';
-            networkLabel.textContent = 'Searching';
+            networkLabel.textContent = 'Connecting';
             msgIndex = 0;
             startMessageCycle();
         }

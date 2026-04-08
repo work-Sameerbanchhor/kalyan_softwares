@@ -51,7 +51,7 @@ app.whenReady().then(() => {
 
     // INJECT THE SECRET HEADER FOR ALL REQUESTS
     session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
-        details.requestHeaders['X-Kalyan-App-Auth'] = 'Kalyan_Secure_Access_2026_##';
+        details.requestHeaders['X-Kalyan-App-Auth'] = 'KalyanSecureAccess2026';
         callback({ requestHeaders: details.requestHeaders });
     });
 
