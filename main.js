@@ -2,6 +2,8 @@ const { app, BrowserWindow, ipcMain, session, Menu } = require('electron');
 const path = require('path');
 let mainWindow;
 
+const CLOUD_URL = 'https://sameerbanchhor-work-kalyan-pg-system.hf.space/';
+
 function createWindow() {
     // Remove the application menu bar entirely (File, Edit, View, etc.)
     Menu.setApplicationMenu(null);
@@ -23,6 +25,7 @@ function createWindow() {
         },
     });
 
+    // Step 1: Show loading screen
     mainWindow.loadFile('loading.html');
 
     mainWindow.once('ready-to-show', () => {
@@ -39,15 +42,21 @@ function startDiscovery() {
     if (!mainWindow) return;
 
     mainWindow.webContents.send('discovery-status', { state: 'found', message: `Connecting to Cloud Server...` });
-    console.log(`[Connection] Connecting to https://sameerbanchhor-work-kalyan-pg-system.hf.space/`);
+    console.log(`[Connection] Connecting to ${CLOUD_URL}`);
 
-    // Redirect after a short delay for visual feedback
+    // Step 2: After loading animation, go to access page (not the app directly)
     setTimeout(() => {
-        mainWindow.loadURL('https://sameerbanchhor-work-kalyan-pg-system.hf.space/').catch(err => {
-            console.error('[Connection] Failed to load server URL:', err);
-            mainWindow.webContents.send('discovery-status', { state: 'error', message: 'Failed to connect to cloud server.' });
-        });
+        mainWindow.loadFile('access.html');
+        console.log('[Flow] Loaded access/activation page.');
     }, 2000);
+}
+
+function loadMainApp() {
+    if (!mainWindow) return;
+    console.log(`[Flow] Access granted — loading main application: ${CLOUD_URL}`);
+    mainWindow.loadURL(CLOUD_URL).catch(err => {
+        console.error('[Connection] Failed to load server URL:', err);
+    });
 }
 
 app.whenReady().then(() => {
@@ -67,10 +76,22 @@ app.whenReady().then(() => {
         }
     });
 
-    // Handle retry from UI
+    // Handle retry from loading page
     ipcMain.on('retry-discovery', () => {
         console.log('[Discovery] Manual retry triggered by user.');
         startDiscovery();
+    });
+
+    // Handle access granted — load the actual app
+    ipcMain.on('access-granted', () => {
+        console.log('[Access] Master password accepted.');
+        loadMainApp();
+    });
+
+    // Handle access denied — too many failed attempts
+    ipcMain.on('access-denied', () => {
+        console.log('[Access] Too many failed attempts. Quitting app.');
+        app.quit();
     });
 });
 

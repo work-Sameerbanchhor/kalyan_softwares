@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access — Kalyan Smart Student System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Serif+Display&display=swap');
+
+        :root {
+            --forest-900: #1a2e1a;
+            --forest-800: #243524;
+            --forest-700: #2d4a2d;
+            --forest-600: #3a5c3a;
+            --forest-500: #4a7c4a;
+            --forest-400: #6b9e6b;
+            --forest-300: #8fb88f;
+            --forest-200: #b5d3b5;
+            --forest-100: #dceadc;
+            --forest-50:  #f0f7f0;
+
+            --gold-500: #b8944a;
+            --gold-400: #d4aa5c;
+            --gold-300: #e8c882;
+
+            --ivory-100: #faf8f4;
+
+            --text-on-dark: #e8eee8;
+            --text-on-dark-muted: #a3b8a3;
+
+            --danger: #c0392b;
+            --success: #27ae60;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: var(--forest-900);
+            color: var(--text-on-dark);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ── Background Effects ── */
+        .bg-glow {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 700px; height: 700px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(74,124,74,0.15) 0%, rgba(26,46,26,0) 70%);
+            animation: glowPulse 5s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            50%      { opacity: 1;   transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.1;
+            z-index: 0;
+            animation: blobDrift 14s ease-in-out infinite alternate;
+        }
+
+        .blob-1 {
+            width: 400px; height: 400px;
+            background: var(--forest-500);
+            top: -100px; left: -80px;
+        }
+
+        .blob-2 {
+            width: 350px; height: 350px;
+            background: var(--gold-400);
+            bottom: -80px; right: -80px;
+            animation-delay: -7s;
+        }
+
+        .blob-3 {
+            width: 250px; height: 250px;
+            background: var(--forest-400);
+            top: 40%; right: 15%;
+            animation-delay: -4s;
+        }
+
+        @keyframes blobDrift {
+            0%   { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(25px, 15px) scale(1.15); }
+        }
+
+        /* ── Floating Particles ── */
+        .particles {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .leaf {
+            position: absolute;
+            width: 6px; height: 6px;
+            border-radius: 50% 0 50% 0;
+            opacity: 0;
+            animation: leafFloat linear infinite;
+        }
+
+        .leaf:nth-child(1)  { left: 10%;  background: var(--forest-400); animation-duration: 12s; animation-delay: 0s; }
+        .leaf:nth-child(2)  { left: 25%;  background: var(--gold-400);   animation-duration: 15s; animation-delay: 3s; }
+        .leaf:nth-child(3)  { left: 45%;  background: var(--forest-300); animation-duration: 10s; animation-delay: 1s; }
+        .leaf:nth-child(4)  { left: 60%;  background: var(--forest-500); animation-duration: 14s; animation-delay: 5s; }
+        .leaf:nth-child(5)  { left: 80%;  background: var(--gold-300);   animation-duration: 11s; animation-delay: 2s; }
+        .leaf:nth-child(6)  { left: 90%;  background: var(--forest-400); animation-duration: 13s; animation-delay: 4s; }
+
+        @keyframes leafFloat {
+            0%   { transform: translateY(100vh) rotate(0deg) scale(0); opacity: 0; }
+            8%   { opacity: 0.4; }
+            50%  { transform: translateY(50vh) rotate(180deg) translateX(25px) scale(1); opacity: 0.3; }
+            90%  { opacity: 0.15; }
+            100% { transform: translateY(-10vh) rotate(360deg) translateX(-15px) scale(0.7); opacity: 0; }
+        }
+
+        /* ── Main Access Card ── */
+        .access-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 420px;
+            padding: 2rem;
+        }
+
+        .access-card {
+            background: linear-gradient(165deg, rgba(36,53,36,0.85) 0%, rgba(26,46,26,0.9) 100%);
+            border: 1px solid rgba(107,158,107,0.15);
+            border-radius: 20px;
+            padding: 2.8rem 2.2rem 2.4rem;
+            backdrop-filter: blur(20px);
+            box-shadow:
+                0 25px 60px rgba(0,0,0,0.4),
+                0 0 0 1px rgba(107,158,107,0.08) inset,
+                0 1px 0 rgba(255,255,255,0.04) inset;
+            opacity: 0;
+            animation: cardIn 0.8s ease-out 0.2s forwards;
+        }
+
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(30px) scale(0.96); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* ── Shield Icon ── */
+        .shield-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1.8rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .shield-glow {
+            position: absolute;
+            width: 90px; height: 90px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212,170,92,0.2) 0%, transparent 70%);
+            animation: shieldGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes shieldGlow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50%      { opacity: 1; transform: scale(1.15); }
+        }
+
+        .shield-svg {
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 0 12px rgba(212,170,92,0.3));
+        }
+
+        /* ── Title ── */
+        .access-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            text-align: center;
+            margin-bottom: 0.4rem;
+            background: linear-gradient(135deg, var(--text-on-dark) 0%, var(--gold-300) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .access-subtitle {
+            text-align: center;
+            font-size: 0.78rem;
+            color: var(--text-on-dark-muted);
+            margin-bottom: 2rem;
+            letter-spacing: 0.02em;
+            line-height: 1.5;
+        }
+
+        /* ── Input Group ── */
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-on-dark-muted);
+            margin-bottom: 0.6rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .key-icon {
+            position: absolute;
+            left: 14px;
+            color: var(--forest-400);
+            opacity: 0.6;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .key-input {
+            width: 100%;
+            padding: 14px 48px 14px 44px;
+            background: rgba(26,46,26,0.6);
+            border: 1.5px solid rgba(107,158,107,0.2);
+            border-radius: 12px;
+            color: var(--text-on-dark);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+            caret-color: var(--gold-400);
+        }
+
+        .key-input::placeholder {
+            color: rgba(163,184,163,0.35);
+            letter-spacing: 2px;
+            font-weight: 400;
+            text-transform: none;
+            font-size: 0.85rem;
+        }
+
+        .key-input:focus {
+            border-color: var(--gold-400);
+            box-shadow: 0 0 0 3px rgba(212,170,92,0.1), 0 0 20px rgba(212,170,92,0.08);
+            background: rgba(26,46,26,0.8);
+        }
+
+        .key-input:focus ~ .key-icon,
+        .key-input:focus + .key-icon {
+            color: var(--gold-400);
+            opacity: 1;
+        }
+
+        .toggle-visibility {
+            position: absolute;
+            right: 14px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-on-dark-muted);
+            opacity: 0.5;
+            transition: all 0.3s ease;
+            z-index: 2;
+            padding: 4px;
+        }
+
+        .toggle-visibility:hover {
+            opacity: 1;
+            color: var(--gold-400);
+        }
+
+        /* ── Submit Button ── */
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--forest-600) 0%, var(--forest-700) 100%);
+            border: 1.5px solid rgba(107,158,107,0.2);
+            border-radius: 12px;
+            color: var(--text-on-dark);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212,170,92,0.12), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, var(--forest-500) 0%, var(--forest-600) 100%);
+            border-color: rgba(107,158,107,0.3);
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ── Error Message ── */
+        .error-msg {
+            text-align: center;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #e57373;
+            margin-top: 1rem;
+            opacity: 0;
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+            min-height: 1.2rem;
+        }
+
+        .error-msg.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── Shake Animation ── */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+            20%, 40%, 60%, 80% { transform: translateX(4px); }
+        }
+
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .key-input.error {
+            border-color: #e57373;
+            box-shadow: 0 0 0 3px rgba(229,115,115,0.1);
+        }
+
+        /* ── Success State ── */
+        .key-input.success {
+            border-color: var(--success);
+            box-shadow: 0 0 0 3px rgba(39,174,96,0.15), 0 0 20px rgba(39,174,96,0.1);
+        }
+
+        .submit-btn.success {
+            background: linear-gradient(135deg, var(--success) 0%, #219a52 100%);
+            border-color: rgba(39,174,96,0.3);
+        }
+
+        /* ── Divider ── */
+        .divider {
+            width: 50px;
+            height: 2px;
+            margin: 0 auto 1.8rem;
+            background: linear-gradient(90deg, transparent, var(--gold-400), transparent);
+        }
+
+        /* ── Footer ── */
+        .footer {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.6rem;
+            color: var(--text-on-dark-muted);
+            opacity: 0;
+            animation: fadeIn 1s ease-out 1s forwards;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 600;
+            z-index: 1;
+        }
+
+        .footer span {
+            color: var(--gold-400);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 0.6; }
+        }
+
+        /* ── Attempts Counter ── */
+        .attempts-info {
+            text-align: center;
+            margin-top: 0.8rem;
+            font-size: 0.68rem;
+            color: var(--text-on-dark-muted);
+            opacity: 0.5;
+        }
+
+        /* ── Loading Spinner for Success ── */
+        .loading-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(26,46,26,0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1.2rem;
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .loading-spinner {
+            width: 40px; height: 40px;
+            border: 3px solid rgba(107,158,107,0.2);
+            border-top-color: var(--gold-400);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 0.85rem;
+            color: var(--text-on-dark-muted);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Effects -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="bg-glow"></div>
+
+    <!-- Floating Particles -->
+    <div class="particles">
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+    </div>
+
+    <!-- Access Card -->
+    <div class="access-container">
+        <div class="access-card" id="access-card">
+
+            <!-- Shield Icon -->
+            <div class="shield-icon">
+                <div class="shield-glow"></div>
+                <svg class="shield-svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--gold-400);">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    <path d="M9 12l2 2 4-4" opacity="0.6"/>
+                </svg>
+            </div>
+
+            <h1 class="access-title">Access Required</h1>
+            <p class="access-subtitle">Enter your master password to unlock<br>Kalyan Smart Student System</p>
+
+            <div class="divider"></div>
+
+            <form id="access-form" autocomplete="off">
+                <div class="input-group">
+                    <label class="input-label" for="key-input">Master Password</label>
+                    <div class="input-wrapper">
+                        <svg class="key-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+                        </svg>
+                        <input
+                            type="password"
+                            id="key-input"
+                            class="key-input"
+                            placeholder="Enter password"
+                            maxlength="20"
+                            autofocus
+                            spellcheck="false"
+                            autocomplete="off"
+                        >
+                        <button type="button" class="toggle-visibility" id="toggle-vis" tabindex="-1" aria-label="Toggle password visibility">
+                            <svg id="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <svg id="eye-off-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                                <line x1="1" y1="1" x2="23" y2="23"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submit-btn">
+                    Unlock System
+                </button>
+
+                <div class="error-msg" id="error-msg">Invalid password. Please try again.</div>
+                <div class="attempts-info" id="attempts-info"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Access granted — loading system...</div>
+    </div>
+
+    <div class="footer">Powered by <span>Kalyan Technologies</span></div>
+
+    <script>
+        const MASTER_KEY = 'EKTASAM';
+        const MAX_ATTEMPTS = 5;
+        let attempts = 0;
+
+        const form = document.getElementById('access-form');
+        const input = document.getElementById('key-input');
+        const submitBtn = document.getElementById('submit-btn');
+        const errorMsg = document.getElementById('error-msg');
+        const attemptsInfo = document.getElementById('attempts-info');
+        const card = document.getElementById('access-card');
+        const toggleVis = document.getElementById('toggle-vis');
+        const eyeIcon = document.getElementById('eye-icon');
+        const eyeOffIcon = document.getElementById('eye-off-icon');
+        const loadingOverlay = document.getElementById('loading-overlay');
+
+        let isPasswordVisible = false;
+
+        // Toggle password visibility
+        toggleVis.addEventListener('click', () => {
+            isPasswordVisible = !isPasswordVisible;
+            input.type = isPasswordVisible ? 'text' : 'password';
+            eyeIcon.style.display = isPasswordVisible ? 'none' : 'block';
+            eyeOffIcon.style.display = isPasswordVisible ? 'block' : 'none';
+            input.focus();
+        });
+
+        // Clear error state on typing
+        input.addEventListener('input', () => {
+            input.classList.remove('error');
+            errorMsg.classList.remove('visible');
+        });
+
+        // Form submit
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const value = input.value.trim().toUpperCase();
+
+            if (!value) {
+                showError('Please enter the master password.');
+                return;
+            }
+
+            if (value === MASTER_KEY) {
+                // ✅ Success
+                input.classList.remove('error');
+                input.classList.add('success');
+                submitBtn.classList.add('success');
+                submitBtn.textContent = '✓ Access Granted';
+                submitBtn.disabled = true;
+                errorMsg.classList.remove('visible');
+
+                setTimeout(() => {
+                    loadingOverlay.classList.add('active');
+                }, 400);
+
+                setTimeout(() => {
+                    // Send IPC to main process to load the app
+                    window.electronAPI.accessGranted();
+                }, 1500);
+            } else {
+                // ❌ Wrong key
+                attempts++;
+                const remaining = MAX_ATTEMPTS - attempts;
+
+                if (remaining <= 0) {
+                    showError('Too many failed attempts. Restarting...');
+                    submitBtn.disabled = true;
+                    setTimeout(() => {
+                        window.electronAPI.accessDenied();
+                    }, 2000);
+                    return;
+                }
+
+                showError('Invalid password. Please try again.');
+                attemptsInfo.textContent = `${remaining} attempt${remaining !== 1 ? 's' : ''} remaining`;
+
+                // Shake animation
+                card.classList.add('shake');
+                input.classList.add('error');
+                setTimeout(() => card.classList.remove('shake'), 500);
+
+                input.value = '';
+                input.focus();
+            }
+        });
+
+        function showError(msg) {
+            errorMsg.textContent = msg;
+            errorMsg.classList.add('visible');
+        }
+    </script>
+</body>
+</html>

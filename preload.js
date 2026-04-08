@@ -12,6 +12,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
     
     // Server connection
     connectToServer: (serverUrl) => ipcRenderer.send('connect-server', serverUrl),
+
+    // Access control
+    accessGranted: () => ipcRenderer.send('access-granted'),
+    accessDenied: () => ipcRenderer.send('access-denied'),
     
     // Basic system info (safe)
     getAppVersion: () => process.env.npm_package_version || '1.0.0',
